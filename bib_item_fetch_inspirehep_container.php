@@ -33,13 +33,10 @@ final class bib_item_fetch_inspirehep_container extends bib_item_fetch_container
     protected function next_url() {
         $c = $this->count() + 1;
         $q = $this->query_;
-#        $url = "https://old.inspirehep.net/search?ln=en&of=hx&jrec=$c&q=$q";
-#        $url = "https://inspirehep.net/api/literature?ln=en&of=hx&jrec=$c&q=$q";
         $url = "https://inspirehep.net/api/literature?sort=mostrecent&q=$q&format=bibtex&size=50";
 
         return $url;
     }
-
 
 }
 

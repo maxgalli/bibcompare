@@ -4,7 +4,7 @@ require_once('bib_item_container.php');
 require_once('bibtexParse/PARSEENTRIES.php');
 
 abstract class bib_item_fetch_container extends bib_item_container {
-    const MAX_FETCH = 100;
+    const MAX_FETCH = 1;
 
     private $num_;
     abstract protected function has_next();
@@ -25,7 +25,7 @@ abstract class bib_item_fetch_container extends bib_item_container {
             $url = $this->next_url();
             curl_setopt($ch, CURLOPT_URL,$url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $items = $this->parse_page(curl_exec($ch));
+            $items = curl_exec($ch);
             curl_close($ch);
             $this->push_back($items);
             if ($old == $this->count()) break;
