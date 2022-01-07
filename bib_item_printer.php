@@ -6,7 +6,7 @@ class bib_item_printer {
 
     private $data_;
 
-    public function bib_item_printer(bib_item &$i) {
+    public function __construct(bib_item &$i) {
         $this->data_ = $i->all_attr();
     }
     
