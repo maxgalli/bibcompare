@@ -46,6 +46,8 @@ The main feature that broke the behavior of this package probably consists in th
 
 Perorming a match with a query like ```dissertori``` still takes around ~3 minutes, probably this can be taken down by applying some more metadata filtering in the URL itself.
 
-## Debug Tips:
+## Debug Tips
 
-To avoid running over all Guenther's publications on Inspire (which are a lot and take some time to be fetched) it is convenient to comment out the while loop inside ```bib_item_fetch_inspirehep_container.php```, in order to fetch only the first page of results. 
+To avoid running over all Guenther's publications on Inspire (which are a lot and take some time to be fetched) it is convenient to comment out the while loop inside ```bib_item_fetch_inspirehep_container.php```, in order to fetch only the first page of results.
+
+Tests are located in the directory.
