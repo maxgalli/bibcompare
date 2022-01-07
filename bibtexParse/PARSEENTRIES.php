@@ -2,7 +2,7 @@
 /*
 v21
 
-Inspired by an awk BibTeX parser written by Nelson H. F. Beebe over 20 years ago although 
+Inspired by an awk BibTeX parser written by Nelson H. F. Beebe over 20 years ago although
 little of that remains.
 
 Released through http://bibliophile.sourceforge.net under the GPL licence.
@@ -10,7 +10,7 @@ Do whatever you like with this -- some credit to the author(s) would be apprecia
 
 A collection of PHP classes to manipulate bibtex files.
 
-If you make improvements, please consider contacting the administrators at bibliophile.sourceforge.net 
+If you make improvements, please consider contacting the administrators at bibliophile.sourceforge.net
 so that your improvements can be added to the release package.
 
 Mark Grimshaw 2006
@@ -34,21 +34,21 @@ http://bibliophile.sourceforge.net
                            someField = {value}}
 
 	v2 ****************************************** v2
-						   
-30/01/2006 v2.0 Esteban Zimanyi 
+
+30/01/2006 v2.0 Esteban Zimanyi
     - Add support for @string defined by other strings as in @string( AA = BB # " xx " # C }
     - Add support for comments as defined in Bibtex, i.e., ignores everything that is outside
-      entries delimited by '@' and the closing delimiter. In particular, comments in Bibtex do not 
+      entries delimited by '@' and the closing delimiter. In particular, comments in Bibtex do not
       necessarily have a % at the begining of the line !
 This required a complete rewrite of many functions as well as writing new ones !
 
 31/01/2006 Mark Grimshaw
    - Ensured that @comment{...} is ignored in parseEntry().
-   - Modified extractEntries() to ensure that entries where the start brace/parenthesis is on a 
+   - Modified extractEntries() to ensure that entries where the start brace/parenthesis is on a
      new line are properly parsed.
-	 
+
 10/02/2006 Mark Grimshaw
-  - A 4th array, $this->undefinedStrings, is now returned that holds field values that are judged to be undefined strings.  
+  - A 4th array, $this->undefinedStrings, is now returned that holds field values that are judged to be undefined strings.
 i.e. they are a non-numeric value that is not defined in a @string{...} entry and not enclosed by braces or double-quotes.
 This array will be empty unless the following condition is met:
 ($this->removeDelimit || $this->expandMacro && $this->fieldExtract)
@@ -98,7 +98,7 @@ This array will be empty unless the following condition is met:
                citeulike-article-id = {12222
     }
                ,
-               ignoreMe = {blah}, }    
+               ignoreMe = {blah}, }
 
 @article
 {
@@ -154,9 +154,9 @@ class PARSEENTRIES
 	function loadBibtexString($bibtex_string)
 	{
 		if(is_string($bibtex_string))
-			$this->bibtexString = explode("\n",$bibtex_string);    
+			$this->bibtexString = explode("\n",$bibtex_string);
 		else
-			$this->bibtexString = $bibtex_string;   
+			$this->bibtexString = $bibtex_string;
 		$this->parseFile = FALSE;
 		$this->currentLine = 0;
 	}
@@ -199,7 +199,7 @@ class PARSEENTRIES
 	}
 // Extract value part of @string field enclosed by double-quotes or braces.
 // The string may be expanded with previously-defined strings
-	function extractStringValue($string) 
+	function extractStringValue($string)
 	{
 		// $string contains a end delimiter, remove it
 		$string = trim(substr($string,0,strlen($string)-1));
@@ -241,11 +241,11 @@ class PARSEENTRIES
 			$oldString = substr_replace($oldString, '', $pos, strlen($value));
 		}
 		$rev = strrev(trim($oldString));
-		if($rev{0} != ',')
+		if($rev[0] != ',')
 			$oldString .= ',';
 		$keys = preg_split("/=,/", $oldString);
 		// 22/08/2004 - Mark Grimshaw
-		// I have absolutely no idea why this array_pop is required but it is.  Seems to always be 
+		// I have absolutely no idea why this array_pop is required but it is.  Seems to always be
 		// an empty key at the end after the split which causes problems if not removed.
 		array_pop($keys);
 		foreach($keys as $key)
@@ -253,7 +253,7 @@ class PARSEENTRIES
 			$value = trim(array_shift($values));
 			$rev = strrev($value);
 			// remove any dangling ',' left on final field of entry
-			if($rev{0} == ',')
+			if($rev[0] == ',')
 				$value = rtrim($value, ",");
 			if(!$value)
 				continue;
@@ -269,8 +269,8 @@ class PARSEENTRIES
 // Start splitting a bibtex entry into component fields.
 // Store the entry type and citation.
 	function fullSplit($entry)
-	{        
-		$matches = preg_split("/@(.*)[{(](.*),/U", $entry, 2, PREG_SPLIT_DELIM_CAPTURE); 
+	{
+		$matches = preg_split("/@(.*)[{(](.*),/U", $entry, 2, PREG_SPLIT_DELIM_CAPTURE);
 		$this->entries[$this->count]['bibtexEntryType'] = strtolower(trim($matches[1]));
 		// sometimes a bibtex entry will have no citation key
 		if(preg_match("/=/", $matches[2])) // this is a field
@@ -285,7 +285,7 @@ class PARSEENTRIES
 	{
 		$count = 0;
 		$lastLine = FALSE;
-		if(preg_match("/@(.*)([{(])/U", preg_quote($entry), $matches)) 
+		if(preg_match("/@(.*)([{(])/U", preg_quote($entry), $matches))
 		{
 			if(!array_key_exists(1, $matches))
 				return $lastLine;
@@ -309,12 +309,12 @@ class PARSEENTRIES
 // Remove delimiters from a string
 	function removeDelimiters($string)
 	{
-		if($string  && ($string{0} == "\""))
+		if($string  && ($string[0] == "\""))
 		{
 			$string = substr($string, 1);
 			$string = substr($string, 0, -1);
 		}
-		else if($string && ($string{0} == "{"))
+		else if($string && ($string[0] == "{"))
 		{
 			if(strlen($string) > 0 && $string[strlen($string)-1] == "}")
 			{
@@ -332,11 +332,11 @@ class PARSEENTRIES
 	}
 
 // This function works like explode('#',$val) but has to take into account whether
-// the character # is part of a string (i.e., is enclosed into "..." or {...} ) 
+// the character # is part of a string (i.e., is enclosed into "..." or {...} )
 // or defines a string concatenation as in @string{ "x # x" # ss # {xx{x}x} }
 	function explodeString($val)
 	{
-		$openquote = $bracelevel = $i = $j = 0; 
+		$openquote = $bracelevel = $i = $j = 0;
 		while ($i < strlen($val))
 		{
 			if ($val[$i] == '"')
@@ -356,17 +356,17 @@ class PARSEENTRIES
 		return $strings;
 	}
 
-// This function receives a string and a closing delimiter '}' or ')' 
+// This function receives a string and a closing delimiter '}' or ')'
 // and looks for the position of the closing delimiter taking into
 // account the following Bibtex rules:
 //  * Inside the braces, there can arbitrarily nested pairs of braces,
-//    but braces must also be balanced inside quotes! 
-//  * Inside quotes, to place the " character it is not sufficient 
-//    to simply escape with \": Quotes must be placed inside braces. 
+//    but braces must also be balanced inside quotes!
+//  * Inside quotes, to place the " character it is not sufficient
+//    to simply escape with \": Quotes must be placed inside braces.
 	function closingDelimiter($val,$delimitEnd)
 	{
 //  echo "####>$delimitEnd $val<BR>";
-		$openquote = $bracelevel = $i = $j = 0; 
+		$openquote = $bracelevel = $i = $j = 0;
 		while ($i < strlen($val))
 		{
 			// a '"' found at brace level 0 defines a value such as "ss{\"o}ss"
@@ -397,12 +397,12 @@ class PARSEENTRIES
 			foreach ($stringlist as $str)
 			{
 				// trim the string since usually # is enclosed by spaces
-				$str = trim($str); 
+				$str = trim($str);
 				// replace the string if macro is already defined
 				// strtolower is used since macros are case insensitive
 				if (isset($this->strings[strtolower($str)]))
 					$string .= $this->strings[strtolower($str)];
-				else 
+				else
 					$string .= $this->removeDelimiters(trim($str));
 			}
 		}
@@ -410,9 +410,9 @@ class PARSEENTRIES
 	}
 
 // This function extract entries taking into account how comments are defined in BibTeX.
-// BibTeX splits the file in two areas: inside an entry and outside an entry, the delimitation 
-// being indicated by the presence of a @ sign. When this character is met, BibTex expects to 
-// find an entry. Before that sign, and after an entry, everything is considered a comment! 
+// BibTeX splits the file in two areas: inside an entry and outside an entry, the delimitation
+// being indicated by the presence of a @ sign. When this character is met, BibTex expects to
+// find an entry. Before that sign, and after an entry, everything is considered a comment!
 	function extractEntries()
 	{
 		$inside = $possibleEntryStart = FALSE;
@@ -442,17 +442,17 @@ class PARSEENTRIES
 				$entry .= " ".$line;
 				if ($j=$this->closingDelimiter($entry,$delimitEnd))
 				{
-					// all characters after the delimiter are thrown but the remaining 
+					// all characters after the delimiter are thrown but the remaining
 					// characters must be kept since they may start the next entry !!!
 					$lastLine = substr($entry,$j+1);
 					$entry = substr($entry,0,$j+1);
-					// Strip excess whitespaces from the entry 
+					// Strip excess whitespaces from the entry
 					$entry = preg_replace('/\s\s+/', ' ', $entry);
 					$this->parseEntry($entry);
 					$entry = strchr($lastLine,"@");
-					if ($entry) 
+					if ($entry)
 						$inside = TRUE;
-					else 
+					else
 						$inside = FALSE;
 				}
 			}
@@ -473,11 +473,11 @@ class PARSEENTRIES
 		if($this->fieldExtract)
 		{
 			// Next lines must take into account strings defined by previously-defined strings
-			$strings = $this->strings; 
+			$strings = $this->strings;
 			// $this->strings is initialized with strings provided by user if they exists
-			// it is supposed that there are no substitutions to be made in the user strings, i.e., no # 
-			$this->strings = isset($this->userStrings) ? $this->userStrings : array() ; 
-			foreach($strings as $value) 
+			// it is supposed that there are no substitutions to be made in the user strings, i.e., no #
+			$this->strings = isset($this->userStrings) ? $this->userStrings : array() ;
+			foreach($strings as $value)
 			{
 				// changed 21/08/2004 G. Gardey
 				// 23/08/2004 Mark G. account for comments on same line as @string - count delimiters in string value
@@ -486,7 +486,7 @@ class PARSEENTRIES
 				$delimit = $matches[1];
 				$matches = preg_split("/=/", $matches[2], 2, PREG_SPLIT_DELIM_CAPTURE);
 				// macros are case insensitive
-				$this->strings[strtolower(trim($matches[0]))] = $this->extractStringValue($matches[1]); 
+				$this->strings[strtolower(trim($matches[0]))] = $this->extractStringValue($matches[1]);
 			}
 		}
 		// changed 21/08/2004 G. Gardey
@@ -497,13 +497,13 @@ class PARSEENTRIES
 			for($i = 0; $i < count($this->entries); $i++)
 			{
 				foreach($this->entries[$i] as $key => $value)
-				// 02/05/2005 G. Gardey don't expand macro for bibtexCitation 
+				// 02/05/2005 G. Gardey don't expand macro for bibtexCitation
 				// and bibtexEntryType
 				if($key != 'bibtexCitation' && $key != 'bibtexEntryType')
-					$this->entries[$i][$key] = trim($this->removeDelimitersAndExpand($this->entries[$i][$key])); 
+					$this->entries[$i][$key] = trim($this->removeDelimitersAndExpand($this->entries[$i][$key]));
 			}
 		}
-// EZ: Remove this to be able to use the same instance for parsing several files, 
+// EZ: Remove this to be able to use the same instance for parsing several files,
 // e.g., parsing a entry file with its associated abbreviation file
 //		if(empty($this->preamble))
 //			$this->preamble = FALSE;
