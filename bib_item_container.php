@@ -19,7 +19,7 @@ abstract class bib_item_container implements Iterator {
 
     public function get_by_attr($attr,$value) {
         if (!isset($this->cache_[$attr])) {
-            $this->build_cache($attr); 
+            $this->build_cache($attr);
         }
         if (isset($this->cache_[$attr][$value])) {
             return $this->cache_[$attr][$value];
@@ -42,18 +42,23 @@ abstract class bib_item_container implements Iterator {
     }
 
     private $position_ = 0;
+    #[\ReturnTypeWillChange]
     function rewind() {
         $this->position_ = 0;
     }
+    #[\ReturnTypeWillChange]
     function current() {
         return $this->get($this->position_);
     }
+    #[\ReturnTypeWillChange]
     function key() {
         return $this->position_;
     }
+    #[\ReturnTypeWillChange]
     function next() {
         ++$this->position_;
     }
+    #[\ReturnTypeWillChange]
     function valid() {
         return ($this->position_ < $this->count());
     }
