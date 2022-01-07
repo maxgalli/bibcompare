@@ -3,8 +3,8 @@
 require_once('bib_item_single.php');
 
 abstract class bib_item_container implements Iterator {
-    private $item_;
-    private $cache_;
+    private $item_ = array();
+    private $cache_ = array();
     public function add(bib_item $i) {
         $this->cache_ = null;
         $this->item_[] = $i;
