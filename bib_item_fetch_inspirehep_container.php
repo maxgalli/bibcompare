@@ -3,7 +3,7 @@
 require_once('bib_item_fetch_container.php');
 
 final class bib_item_fetch_inspirehep_container extends bib_item_fetch_container {
-    
+
     public function __construct($query) {
         /* After the changes introduced in inspireHEP (that can be seen here https://github.com/inspirehep/rest-api-doc)
         results are returned divided into pages of a certain size.
@@ -16,18 +16,18 @@ final class bib_item_fetch_inspirehep_container extends bib_item_fetch_container
         */
         $url = "https://inspirehep.net/api/literature?fields=links&sort=mostrecent&q=$query&size=50";
         $links = $this->get_links($url);
-        $this->$bibtex_links = array();
-        $this->$bibtex_links[] = $links->bibtex;
+        $bibtex_links = array();
+        $bibtex_links[] = $links->bibtex;
         $is_there_next = array_key_exists('next', $links);
         while($is_there_next == TRUE) {
             $next_url = $links->next;
             $links = $this->get_links($next_url);
-            $this->$bibtex_links[] = $links->bibtex;
+            $bibtex_links[] = $links->bibtex;
             $is_there_next = array_key_exists('next', $links);
         }
 
         # get bibitems from each page
-        foreach($this->$bibtex_links as $bl) {
+        foreach($bibtex_links as $bl) {
             $this->fetch($bl);
         }
     }
