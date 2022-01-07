@@ -156,7 +156,8 @@ foreach ($c1 as $bi1) {
     if ($bi1->has_pair()) continue;
     foreach ($c2 as $bi2) {
         if ($bi2->has_pair()) continue;
-        $pair = new bib_item_pair($bi1,$bi2,new bib_item_my_matcher($skip));
+        $pl = new bib_item_my_matcher($skip);
+        $pair = new bib_item_pair($bi1,$bi2,$pl);
         if ($pair->get_quality() != bib_item_matcher::MATCH_NONE) break;
     }
 }
@@ -237,7 +238,8 @@ foreach ($c1 as $bi) {
       $bi->get_pair()->get_quality() != bib_item_matcher::MATCH_OK
     ) continue;
     $print1 = new bib_item_printer($bi);
-    $print2 = new bib_item_printer($bi->get_pair()->get_item(2));
+    $pl = $bi->get_pair()->get_item(2);
+    $print2 = new bib_item_printer($pl);
     $r .= '<h3 class="title"><a href="#">' . trim($bi->attr('title'),'{}') . '</a></h3>';
     $r .= '<div class="hidden">';
     $r .= '<textarea class="side1">' . $print1->raw() . '</textarea>';
