@@ -256,7 +256,8 @@ foreach ($c1 as $bi) {
       $bi->get_pair()->get_quality() != bib_item_matcher::MATCH_FUZZY
     ) continue;
     $print1 = new bib_item_printer($bi);
-    $print2 = new bib_item_printer($bi->get_pair()->get_item(2));
+    $pl = $bi->get_pair()->get_item(2);
+    $print2 = new bib_item_printer($pl);
     $r .= '<h3 class="title"><a href="#">' . trim($bi->attr('title'),'{}') . '</a></h3>';
     $r .= '<div class="hidden">';
     $r .= '<textarea class="side1">' . $print1->raw() . '</textarea>';
