@@ -139,9 +139,10 @@ foreach ($pair as $p) {
             $match = $c2->get_by_attr($p,$v);
             if (count($match) == 1) {
                 if ($match[0]->has_pair()) continue;
+                $pl = new bib_item_my_matcher($skip);
                 $pair = 
                     new bib_item_pair(
-                      $bi,$match[0],new bib_item_my_matcher($skip)
+                      $bi,$match[0],$pl
                     );
                 if ($pair->get_quality() != bib_item_matcher::MATCH_NONE) break;
             }
@@ -216,7 +217,8 @@ foreach ($c1 as $bi) {
       $bi->get_pair()->get_quality() != bib_item_matcher::MATCH_PERFECT
     ) continue;
     $print1 = new bib_item_printer($bi);
-    $print2 = new bib_item_printer($bi->get_pair()->get_item(2));
+    $pl = $bi->get_pair()->get_item(2);
+    $print2 = new bib_item_printer($pl);
     $r .= '<h3 class="title"><a href="#">' . trim($bi->attr('title'),'{}') . '</a></h3>';
     $r .= '<div class="hidden">';
     $r .= '<textarea class="side1">' . $print1->raw() . '</textarea>';
