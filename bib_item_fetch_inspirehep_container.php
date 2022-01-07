@@ -18,12 +18,12 @@ final class bib_item_fetch_inspirehep_container extends bib_item_fetch_container
         $links = $this->get_links($url);
         $bibtex_links = array();
         $bibtex_links[] = $links->bibtex;
-        $is_there_next = array_key_exists('next', $links);
+        $is_there_next = property_exists($links, 'next');
         while($is_there_next == TRUE) {
             $next_url = $links->next;
             $links = $this->get_links($next_url);
             $bibtex_links[] = $links->bibtex;
-            $is_there_next = array_key_exists('next', $links);
+            $is_there_next = property_exists($links, 'next');
         }
 
         # get bibitems from each page
